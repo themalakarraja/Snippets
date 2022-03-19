@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+	<button id="start" onclick="start()">Start Timer</button>
+	<button id="stop" onclick="stop()">Stop Timer</button>
+	<div id="log"></div>
+<script>
+var reqTimer;
+
+var audioPlayUrl = "https://assets.mixkit.co/sfx/preview/mixkit-alarm-tone-996.mp3";
+var loopTimerTime = 60000;
+var date = "06-10-2021";
+var pincodes = ["388315", "388625"];
+var min_age_limit = ["18", "45"];
+var vaccine = "COVISHIELD";
+var fee_type = "Free";
+
+
+function getTime() {
+	var d = new Date();
+	return d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+}
+
+function print(str) {
+	document.getElementById('log').innerHTML = document.getElementById('log').innerHTML + str + "<br>";
+}
+
+function start() {
+	print("Started at: " + getTime());
+	isAvaible();
+	reqTimer = window.setInterval(function(){
+		isAvaible();
+	}, loopTimerTime);
+}
+
+function playAudio() {
+	var audio = new Audio(audioPlayUrl);
+	audio.loop = true;
+	audio.play();
+	console.log("Audio download");
+}
+
+
+function isAvaible() {
+	print("<br>");
+	for(var i = 0; i<pincodes.length; i++) {
+		var response = sendReq(pincodes[i])['sessions'];
+
+		if (response == null || response == "") {
+			print(getTime() + " " + "Not available at" + " " + pincodes[i]);
+		}
+		else {
+			for (var idx in response) {
+				if (response[idx]['min_age_limit'] == min_age_limit[0] 
+					&& response[idx]['vaccine'] == vaccine 
+					&& response[idx]['fee_type'] == fee_type 
+					&& response[idx]['available_capacity_dose2'] > '0') {
+					playAudio();
+					stop();
+					print("Available at" + " " + pincodes[i] + " " + response[idx]['name'] + " " + response[idx]['min_age_limit'] + " " + response[idx]['vaccine'] + " " + response[idx]['fee_type'] + " " + response[idx]['available_capacity_dose2']);
+					break;
+				}
+				else {
+					print(getTime() + " " + "Not available at" + " " + pincodes[i] + " " + response[idx]['name']);
+				}
+			}
+		}
+	}
+}
+
+function sendReq(pin) {
+	var cowinUrl = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=" + pin + "&date=" + date;
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.open("GET", cowinUrl, false);
+	xmlHttp.send(null);
+    var response = JSON.parse(xmlHttp.responseText);
+	return response;
+}
+
+function stop() {
+	clearInterval(reqTimer);
+	print("Stopped at: " + getTime());
+}
+
+</script>
+
+</body>
+</html>

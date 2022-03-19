@@ -1,0 +1,9 @@
+- MQTT is protocol, it is light wight ie. it is used in IOT
+- MQTT stands for Message Queuing Telemetry Transport
+- We can turn off our light from our mobile
+- Its a publish-subscribe-based messaging protocol. Where publisher is our mobile and subscriber is our light.
+- MQTT Broker is communicate between publisher and subscriber
+- MQTT Broker example: Mosquitto, HiveMQ, Mosca. We can use Google cloud IOT or Amazon IOT Platform as a MQTT Broker
+- Topics is interest for icooming message. Ot specify where you wanbt ti publisg
+- Topics are represented ith strings separated by slashed "/" Slashes indicate the topic level. Example home/office/lamp. Here home and office is Topic level. Topics are case-sensitive
+- 

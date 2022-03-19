@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <title>USCAPE APPAREL</title>
+
+    <style>
+        .nav-link {
+            color: #212325 !important;
+            opacity: .5;
+        }
+
+        .nav-active {
+            border-left: 3px solid #2480a7 !important;
+            font-weight: bold;
+        }
+
+            .nav-active > .nav-link {
+                opacity: 1;
+            }
+
+        body {
+            min-height: 100vh;
+            background-color: #fff;
+        }
+
+        .side-navbar {
+            width: 250px;
+            position: fixed;
+            margin-left: -300px;
+            bottom: 0;
+            height: 100%;
+            transition: 0.5s;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        .my-container {
+            transition: 0.4s;
+        }
+
+        .active-nav {
+            margin-left: 0;
+        }
+
+        .active-cont {
+            margin-left: 250px;
+        }
+
+        #menu-btn {
+            background-color: #100901;
+        }
+
+        .search {
+            position: relative;
+            box-shadow: 0 0 40px rgba(51, 51, 51, .1);
+            width: 100%;
+        }
+
+            .search input {
+                text-indent: 25px;
+                border: 2px solid #d6d4d4
+            }
+
+            .search .fa-search {
+                position: absolute;
+                top: 15px;
+                left: 16px
+            }
+    </style>
+
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Side-Nav -->
+        <div class="side-navbar active-nav border-end px-2 d-flex justify-content-between flex-column" id="sidebar">
+            <div>
+                <a href="/">
+                    <img class="img-fluid mt-2" src="/icons/logo.svg" />
+                </a>
+                <ul id="menu" class="nav text-white mt-5">
+                    <li>
+                        <a href="/Home/Open" class="nav-link px-1">
+                            <img src="/icons/Group 100.svg" class="ps-2"> <span class="ms-3">Open (<span>90</span>)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Home/Edits" class="nav-link px-1">
+                            <img src="/icons/received.svg" class="ps-2"> <span class="ms-3">Edits (<span>90</span>)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Home/Inprogress" class="nav-link align-middle px-1">
+                            <img src="/icons/shuffle.svg" class="ps-2"> <span class="ms-3">Inprogress (<span>90</span>)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Home/ReadyForUscapeApproval" class="nav-link align-middle px-1">
+                            <img src="/icons/Group 277.svg" class="ps-2"> <span class="ms-3">Ready for Uscape Approval (<span>90</span>)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Home/SubmitToLicensing" class="nav-link align-middle px-1">
+                            <img src="/icons/completed-task.svg" class="ps-2"> <span class="ms-3">Submit to Licensing (<span>90</span>)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Home/LicensingPending" class="nav-link align-middle px-1">
+                            <img src="/icons/received-1.svg" class="ps-2"> <span class="ms-3">Licensing Pending (<span>90</span>)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Home/ALLComplete" class="nav-link align-middle px-1">
+                            <img src="/icons/positive-review.svg" class="ps-2"> <span class="ms-3">ALL Complete (<span>90</span>)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Home/Archive" class="nav-link align-middle px-1">
+                            <img src="/icons/logistics-delivery-truck-in-movement.svg" class="ps-2"> <span class="ms-3">Archive (<span>90</span>)</span>
+                        </a>
+                    <li>
+                        <a href="/Home/Cancel" class="nav-link align-middle px-1">
+                            <img src="/icons/Group 220.svg" class="ps-2"> <span class="ms-3">Cancel (<span>90</span>)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Home/Trash" class="nav-link align-middle px-1">
+                            <img src="/icons/received-2.svg" class="ps-2"> <span class="ms-3">Trash (<span>90</span>)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Home/UscapeEdits" class="nav-link align-middle px-1">
+                            <img src="/icons/garbage-can.svg" class="ps-2"> <span class="ms-3">Uscape Edits (<span>90</span>)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Home/AlphaEdits" class="nav-link align-middle px-1">
+                            <img src="/icons/garbage-can.svg" class="ps-2"> <span class="ms-3">Alpha Edits (<span>90</span>)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Home/UnableToSubmit" class="nav-link align-middle px-1">
+                            <img src="/icons/garbage-can.svg" class="ps-2"> <span class="ms-3">Unable to Submit (<span>90</span>)</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Sign out -->
+            <div href="#" class="mb-4 dropup">
+                <a class="nav-link" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user-circle pe-2"></i>Alpha Dezine</a>
+                <ul class="dropdown-menu shadow">
+                    <li><a class="dropdown-item text-danger" href="#">Sign out</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="p-1 my-container active-cont">
+            <div class="row ms-2">
+                <!-- Side nav toggle button -->
+                <div class="mt-2 col-12 col-sm-12 col-md-3 col-lg-3 col-xl-5">
+                    <a class="btn" id="menu-btn"><i class="fas fa-bars bg-white"></i></a>
+                </div>
+                <!-- Top Search bar -->
+                <div class="mt-2 col-12 col-sm-12 col-md-9 col-lg-9 col-xl-7">
+                    <div class="d-flex">
+                        <div class="search me-2">
+                            <i class="fa fa-search"></i> <input type="text" class="form-control" placeholder="Search by Store#, Store Name, School Name">
+                        </div>
+                        <button id="export_excel_btn" type="button" class="btn btn-outline-success text-nowrap"><i class="fas fa-file-excel pe-2"></i>Export Excel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Nav Active
+            var url = window.location;
+            $('ul.nav a[href="' + url + '"]').parent().addClass('nav-active');
+            $('ul.nav a').filter(function () {
+                return this.href == url;
+            }).parent().addClass('nav-active');
+        });
+
+        // Side nav-bar toggle
+        var menu_btn = document.querySelector("#menu-btn");
+        var sidebar = document.querySelector("#sidebar");
+        var container = document.querySelector(".my-container");
+        menu_btn.addEventListener("click", () => {
+            sidebar.classList.toggle("active-nav");
+            container.classList.toggle("active-cont");
+        });
+
+    </script>
+</html>

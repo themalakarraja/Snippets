@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RNR</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        .validation-summary-errors > ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h3 class="pt-4">Reward Section</h3>
+        <div class="row bg-white">
+            <div class="col-xs-12 col-lg-3 mt-3">
+                <div class="mx-3">
+                    <form id="frmPurchased" asp-controller="Reward" asp-action="ImportInvoice" method="post">
+                        <div class="d-flex flex-row">
+                            <div class="pe-4"><i class="fas fa-upload fa-3x base-color img-fluid"></i></div>
+                            <div>
+                                <div>Upload New</div>
+                                <small class="text-muted">Allowed Format: XLS, XLM, XLSM, CSV</small>
+                            </div>
+                        </div>
+                        <input type="hidden" value="[]" id="hidImgDataFile" name="FileData" />
+                        <div id="fileName" class="text-muted"></div>
+                        <div class="row mt-4">
+                            <div class="mb-3">
+                                <label for="month" class="form-label">Select Month :</label>
+                                <select class="form-control" name="month" id="month">
+                                    <option value="">Select Month</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="year" class="form-label">Select Year :</label>
+                                <select class="form-control" name="year" id="year">
+                                    <option value="">Select Year</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <div id="selectDataFileBtn" class="text-center pt-3 cursor-pointer" style="border: 1px dashed #ced4da; border-radius: .25rem">
+                                    <i class="fas fa-file-upload fa-3x base-color img-fluid "></i>
+                                    <p class="mt-2">Browse File</p>
+                                </div>
+                                <input type="file" name="" id="uploadBtnDataFile" class="d-none">
+                            </div>
+                            <div>
+                                <div id="fileUploadAlert" class="alert alert-primary fade mb-3" role="alert" style="display: none">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small id="uploadFileName" class="fw-light"></small>
+                                        <i id="removeFileBtn" class="fas fa-trash-alt cursor-pointer" data-bs-dismiss="alert" aria-label="Close" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove file"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" id="submitFormBtn" type="button">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+    </script>
+    <script>
+    $(function() {
+        let monthArray = new Array();
+        monthArray[0] = "January";
+        monthArray[1] = "February";
+        monthArray[2] = "March";
+        monthArray[3] = "April";
+        monthArray[4] = "May";
+        monthArray[5] = "June";
+        monthArray[6] = "July";
+        monthArray[7] = "August";
+        monthArray[8] = "September";
+        monthArray[9] = "October";
+        monthArray[10] = "November";
+        monthArray[11] = "December";
+        for (m = 0; m <= 11; m++) {
+            let optn = document.createElement("OPTION");
+            optn.text = monthArray[m];
+            // server side month start from one
+            optn.value = (m + 1);
+            // if june selected
+            if (m == 5) {
+                optn.selected = true;
+            }
+            document.getElementById('month').options.add(optn);
+        }
+
+        for (y = 2020; y <= 2025; y++) {
+            let optn = document.createElement("OPTION");
+            optn.text = y;
+            optn.value = y;
+
+            // if year is 2015 selected
+            if (y == 2021) {
+                optn.selected = true;
+            }
+            document.getElementById('year').options.add(optn);
+        }
+
+        // trigger uploadBtnDataFile
+        $("#selectDataFileBtn").click(function() {
+            $("#uploadBtnDataFile").click();
+        });
+
+        $("#uploadBtnDataFile").on('change', uploadOnChangeDataFile);
+
+        $("#removeFileBtn").click(function() {
+            $("#hidImgDataFile").val("[]");
+        });
+
+        $("#submitFormBtn").on('click', submitForm);
+    });
+
+    function uploadOnChangeDataFile() {
+        // validate file
+        let filename = this.value;
+        let lastIndex = filename.lastIndexOf("\\");
+        if (lastIndex >= 0) {
+            filename = filename.substring(lastIndex + 1);
+        }
+
+        let data = new FormData();
+        let files = $('#uploadBtnDataFile')[0].files;
+        for (let i = 0; i < files.length; i++) {
+            data.append(files[i].name, files[i]);
+            FileBNameToshow = files[i].name;
+        }
+        let ext = filename.split('.').pop().toLowerCase();
+        let file_extension = ['xls', 'xlsm', 'csv', 'xlsx'];
+        if ($.inArray(ext, file_extension) == -1) {
+            return;
+        }
+
+        ajaxFileUpload(
+            "/Reward/RawFileImport", data,
+            function(filedata) {
+                $("#hidImgDataFile").val(filedata);
+                $("#fileUploadAlert").addClass("show");
+                $("#fileUploadAlert").addClass("d-block");
+                fileName = JSON.parse(filedata)[0].Name;
+                document.getElementById("uploadFileName").innerText = fileName.length > 25 ? fileName.slice(0, 25) + " ..." : fileName;
+            },
+            function(response) {
+                console.error(response);
+            }
+        );
+    }
+
+    function checkValidation() {
+        let yearVal = $("#year option:selected").val();
+        let monthVal = $("#month option:selected").val();
+
+        if (yearVal <= 0) {
+            return false;
+        }
+        if (monthVal <= 0) {
+            return false;
+        }
+        let UploadPOImage = $("#hidImgDataFile").val();
+        if (UploadPOImage == "[]" || UploadPOImage == "") {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function submitForm() {
+        let isValid = checkValidation();
+        if (isValid == true) {
+
+            ajaxSubmitForm(
+                $("#frmPurchased").attr("action"), $("#frmPurchased").serialize(),
+                function(response) {
+                    if (response == "Success") {
+                        Swal.fire({
+                            title: 'Success',
+                            text: "Your Details Save Successfully",
+                            icon: 'success',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location = "/Reward/RewardImportExcel";
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Cancelled',
+                            text: 'Unable to delete record, please try again',
+                            icon: 'error',
+                        });
+                    }
+                },
+                function(err) {
+                    console.log(err);
+                    Swal.fire({
+                        title: 'Cancelled',
+                        text: 'Unable to delete record, please try again',
+                        icon: 'error',
+                    });
+                }
+            );
+        } else {
+            Swal.fire({
+                title: '',
+                text: "Please Upload File",
+                icon: 'warning',
+                confirmButtonText: 'Ok'
+            });
+        }
+    }
+
+    function generateFiles(Id) {
+        let data = {
+            MasterId: parseInt(Id)
+        }
+
+        ajaxFileUpload(
+            "/Reward/GenerateFullExcel", data,
+            function(filedata) {
+                if (filedata == true) {
+                    window.location = '@Url.Action("DownloadRedHatFile", "Reward")?id=' + Id;
+                }
+            },
+            function(response) {
+                console.error(response);
+            }, "GET"
+        );
+
+
+        @ * $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: '@Url.Action("GenerateFullExcel", "Reward")?MasterId=' + Id,
+            success: function(data) {
+                if (data == true) {
+                    window.location = '@Url.Action("DownloadRedHatFile", "Reward")?id=' + Id;
+                }
+            },
+            error: function(ex) {
+                alert("Error");
+            }
+        });* @
+    }
+
+    function deleteRecord(ImportPerson, ID) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-danger mx-1',
+                cancelButton: 'btn btn-secondary mx-1'
+            },
+            buttonsStyling: false
+        });
+
+        swalWithBootstrapButtons.fire({
+            title: "Sure want to delete ID " + ID + " ?",
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Delete',
+            cancelButtonText: 'Cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: '@Url.Action("DeleteRecord", "Reward")?ImportPerson=' + ImportPerson + '&Id=' + ID,
+                    contentType: false,
+                    processData: false,
+                    success: function(data) {
+                        debugger
+                        if (data == true) {
+                            Swal.fire({
+                                title: 'Deleted!',
+                                text: "Your record has been deleted.",
+                                icon: 'success',
+                                confirmButtonText: 'Ok'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location = "/Reward/RewardImportExcel";
+                                }
+                            });
+                        } else {
+                            swalWithBootstrapButtons.fire(
+                                'Cancelled',
+                                'Unable to delete record, please try again',
+                                'error'
+                            )
+                        }
+                    },
+                    error: function(ex) {
+                        alert("Error");
+                    }
+                });
+            }
+        });
+    }
+
+    function ajaxSubmitForm(_url, _data, onSuccesCallback, onErrorCallback, _method = "POST", contentType = "text/plain") {
+        if (_data != null) {
+            $.ajax({
+                url: _url,
+                type: _method,
+                contentType: contentType,
+                data: _data,
+                success: function(response) {
+                    onSuccesCallback(response);
+                },
+                error: function(response) {
+                    onErrorCallback(response);
+                }
+            });
+        }
+    }
+
+    function ajaxFileUpload(_url, _data, onSuccesCallback, onErrorCallback) {
+        $.ajax({
+            type: 'POST',
+            url: _url,
+            data: _data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                onSuccesCallback(response);
+            },
+            error: function(response) {
+                onErrorCallback(response);
+            }
+        });
+    }
+    </script>
+</body>
+
+</html>

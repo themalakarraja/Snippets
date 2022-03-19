@@ -1,0 +1,33 @@
+How to use OpenCV in Android:
+
+- Download OpenCV android pack
+- Download android NDK
+- Download CMake #
+- Create project with C/C++ support
+- Check "Phone and Tablet", leave the recommended minimum SDK version
+- Include an Empty Activity (this will create files necessary for the C++ functionality)
+- Keep the rest options as they come default
+
+
+- Android Studio has now created a project folder. Inside it, in app/src/main/cpp/, Android Studio will have created a file called native-lib.cpp, which contains an example function called stringfromJNI() that we can ignore. However, you can write your C++ OpenCV code in this file
+
+- In the app folder inside your project folder, a file called CMakeLists.txt will be created. This is the file with all the instructions on how to compile your navtive C++ code. Leave it  as it is right now, we'll be modifying it in a bit
+
+- Copy the libraries of OpenCV3Android folder, Contained in sdk/native/libs (all folders for different architectures). Copy libs folder, inside your app/src/main in Android Studio project past libs folder and change the name from libs to jinLibs.
+
+- Copy the header folder 'include' from OpenCV3Android (sdk/native/jni/) and past it in Android Studio app/src/main/cpp/
+
+- Edit the CMakeLists.txt file so that:
+	1) it imports the OpenCV library(libopencv_java3.so) as a shared library
+	2) it adds the library as a target
+	3) it includes the path to OpenCV's header files. This is a copy of the file I'm using, which does all of this
+	
+{//}
+
+- Now the project is ready to be build in Android Studio: Build->Make project. This will generate a shared library(.so file, in my case app/build/intermediates/cmake/debug/obj
+
+- Following these steps in Unity. Cerate Plugins/Android/libs in unity. Copy the folder "x86" and "armeabi-v7a" from app/build/intermediates/cmake/debug/obj in Android Studio into unity. Copy "libopencv_java3.so" file from armeabi-v7a folder and copy libopencv_java3.so file from x86 folder in OpenCV sdk/native/libs/ and pest in respectively into unity "x86" and "armeabi-v7a" folder
+
+
+
+(Now in Unity, create a folder called Plugins inside the Assets folder. Then another called Android inside Plugins, and another called libs inside Android. Copy the folder "x86" and "armeabi-v7a" from app/build/intermediates/cmake/debug/obj. These are the processor architectures that Android supports (ARMv7 and x86), see here for more info. Android also supports MIPS but its the least popular and not supported by Unity. Also the 64 counters if ARM and x86 are not supported by Unity either. When we later build the app in Unity, it generates a FAT APK by default, which works in both architectures. This setting can be changed in Build Settings->Player Settings->Android->Other Settings-> Device filter. Also copy inside the corresponding architecture folder in Plugins in the file libopencv_java3.so that can be found in OpenCV3Android/sdk/native/libs)
