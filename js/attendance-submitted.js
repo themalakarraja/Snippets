@@ -6,7 +6,7 @@ let chatBoxInputName = "chatTextInput";
 let chatBoxValuePropertyName = "data-initial-value";
 let chatDiv;
 
-var currentTime;
+let currentTime;
 
 if (document.getElementsByName(chatBoxInputName)[0].getAttribute(chatBoxValuePropertyName).toString() != myPid) {
 	alert("Please enter your PID in chatbox");
