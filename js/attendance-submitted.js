@@ -1,10 +1,10 @@
-var myPid = "MG19038";
-var chatDivClass = "vvTMTb";
-var pidArr = ["MG19045", "MG19040", "MG19012", "MG19015", "MG19024"];
-var sendBtnClass = "Cs0vCd";
-var chatBoxInputName = "chatTextInput";
-var chatBoxValuePropertyName = "data-initial-value";
-var chatDiv;
+let myPid = "MG19038";
+let chatDivClass = "vvTMTb";
+let pidArr = ["MG19045", "MG19040", "MG19012", "MG19015", "MG19024"];
+let sendBtnClass = "Cs0vCd";
+let chatBoxInputName = "chatTextInput";
+let chatBoxValuePropertyName = "data-initial-value";
+let chatDiv;
 
 var currentTime;
 
