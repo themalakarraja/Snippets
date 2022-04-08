@@ -1,0 +1,1 @@
+rtsp = "rtsp://username:password@ip_address/1"
