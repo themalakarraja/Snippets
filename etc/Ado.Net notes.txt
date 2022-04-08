@@ -1,0 +1,77 @@
+SqlConnection
+	SqlConnection connectionObj = new SqlConnection("path");
+
+SqlCommand
+There are three methods of SqlCommand. ExecuteNonQuery(), ExecuteScalar(), ExecuteReader()
+
+	SqlCommand cmd = new SqlCommand(query, connectionObj);
+	
+	ExecuteNonQuery:
+		cmd.ExecuteNonQuery();
+		
+		cmd.Parameters.AddWithValue("Key", "Value"); // for parameter
+		cmd.ExecuteNonQuery();
+		
+		foreach(KeyValuePair<string, object> parameter in parameters) // for loop
+			cmd.Parameters.AddWithValue(parameter.Key, parameter.Value);
+		cmd.ExecuteNonQuery();
+	
+	ExecuteScalar:
+		cmd.ExecuteScalar() + "";
+	
+	ExecuteReader:
+		SqlDataReader rdr = cmd.ExecuteReader();
+		SqlDataReader is need to close and ExecuteReader is connected data access model.
+	
+SqlDataAdapter
+	SqlDataAdapter is disconnected data access model.
+	
+	Using SqlDataAdapter without SqlCommand
+		// normal
+		SqlDataAdapter da = new SqlDataAdapter(query, connectionObj);
+		DataSet resultDs = new DataSet();
+        da.Fill(resultDs);
+		
+		// for parameter
+		SqlDataAdapter da = new SqlDataAdapter(query, connectionObj);
+		da.SelectCommand.Parameters.AddWithValue("Key", "Value");
+		DataSet resultDs = new DataSet();
+        da.Fill(resultDs);
+	
+	Using SqlDataAdapter with SqlCommand
+		// normal
+		SqlDataAdapter da = new SqlDataAdapter(cmd);
+		DataSet resultDs = new DataSet();
+        da.Fill(resultDs);
+		
+		// for parameter
+		cmd.Parameters.AddWithValue("Key", "Value");
+		SqlDataAdapter da = new SqlDataAdapter(cmd);
+		DataSet resultDs = new DataSet();
+        da.Fill(resultDs);
+
+DataSet
+	DataSet ds = conService.executeSelect(query);
+	if (ds.Tables[0].Rows.Count > 0)
+	{
+		setExaminerDetails(ds.Tables[0].Rows[0]); // send rows
+	}
+	setExaminerDetails(){
+		if (row.Table.Columns.Contains("examiner_id") && Utils.isDefined(row["examiner_id"]))
+		{
+			this.examiner_id = row["examiner_id"].ToString();
+		}
+	}
+	
+	
+	DataSet ds = conService.executeSelect(query);
+    if (ds.Tables[0].Rows.Count > 0)
+    {
+        examinerDtoList = new List<ExaminerDto>();
+        foreach (DataRow row in ds.Tables[0].Rows)
+        {
+            examinerDto = new ExaminerDto();
+            examinerDto.setExaminerDetails(row);
+            examinerDtoList.Add(examinerDto);
+        }
+    }
